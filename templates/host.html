@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Host Studio{% endblock %}
+
+{% block content %}
+<section class="container py-hero">
+  <div class="center" style="margin-bottom:30px">
+    <span class="eyebrow">Host Studio · Raj Gautam</span>
+    <h1 style="margin-top:12px">Launch your <span class="gradient-text">next session</span></h1>
+    <p class="muted" style="max-width:560px;margin-inline:auto">Create a live Jitsi broadcast or publish an on-demand recording. Your unique room link is generated instantly.</p>
+  </div>
+
+  <div class="card form-card">
+    <form method="post" action="{{ url_for('webinar.host') }}">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="title">Webinar title *</label>
+          <input id="title" name="title" required placeholder="e.g. Python Full-Stack Architecture: From Idea to Production">
+        </div>
+
+        <div class="field">
+          <label for="speaker">Speaker name *</label>
+          <input id="speaker" name="speaker" required value="Raj Gautam" placeholder="Speaker name">
+        </div>
+        <div class="field">
+          <label for="category">Category</label>
+          <input id="category" name="category" placeholder="e.g. Python / Full-Stack">
+        </div>
+
+        <div class="field full">
+          <label>Session mode</label>
+          <div class="mode-picker">
+            <div class="mode-option">
+              <input type="radio" id="mode-live" name="mode" value="live" checked>
+              <label for="mode-live">● Live Jitsi Broadcast</label>
+            </div>
+            <div class="mode-option">
+              <input type="radio" id="mode-recorded" name="mode" value="recorded">
+              <label for="mode-recorded">▶ Recorded / On Demand</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="video_url">Video / Room URL</label>
+          <input id="video_url" name="video_url" placeholder="https://meet.jit.si/WebiMeet-my-room  (or a room name — full URL is auto-built for Live)">
+          <span class="identity-hint">Leave blank for Live to auto-generate <span class="mono">meet.jit.si/WebiMeet-&lt;id&gt;</span>.</span>
+        </div>
+
+        <div class="field">
+          <label for="starts_at">Starts at / label</label>
+          <input id="starts_at" name="starts_at" value="LIVE NOW" placeholder="LIVE NOW or Starts in 2 days">
+        </div>
+        <div class="field">
+          <label for="duration">Duration</label>
+          <input id="duration" name="duration" value="60 min" placeholder="60 min">
+        </div>
+
+        <div class="field full">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="What will attendees learn?"></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="slides_url">Downloadable slides / notes URL</label>
+          <input id="slides_url" name="slides_url" placeholder="https://… (Google Drive, GitHub, PDF)">
+        </div>
+
+        <div class="field full">
+          <label for="accent">Accent colour</label>
+          <select id="accent" name="accent">
+            <option value="rose">Crimson Rose</option>
+            <option value="violet">Electric Violet</option>
+            <option value="emerald">Emerald</option>
+            <option value="sky">Sky Blue</option>
+            <option value="amber">Amber</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="between wrap">
+        <p class="muted" style="font-size:12.5px;margin:0">Stored securely in SQLite · Zero external dependencies.</p>
+        <button type="submit" class="btn btn-primary btn-lg">🚀 Create &amp; Publish Webinar</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

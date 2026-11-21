@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Certificate of Attendance' if attended else 'Certificate Locked' }} · {{ registration.ticket_code }}{% endblock %}
+
+{% block content %}
+<section class="container section-sm">
+  <div class="cert-shell">
+    <div class="between no-print" style="margin-bottom:18px">
+      <a href="{{ url_for('webinar.lobby') }}" class="back-link" style="margin:0">← Back to Lobby</a>
+      <div class="row wrap">
+        {% if attended %}<button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Save as PDF / Print</button>{% endif %}
+        <a href="{{ url_for('webinar.ticket', ticket_code=registration.ticket_code) }}" class="btn btn-outline btn-sm">🎟 View RSVP Pass</a>
+      </div>
+    </div>
+
+    {% if attended %}
+    <div class="cert-paper">
+      <div class="row" style="justify-content:center;gap:12px">
+        <span style="font-size:26px">🏅</span>
+        <span class="cert-gold" style="font-size:11px;letter-spacing:4px;font-weight:800">WEBIMEET · CERTIFIED ATTENDANCE</span>
+      </div>
+
+      <div class="cert-title">Certificate<br>of Attendance</div>
+      <div class="cert-sub">Proudly presented to</div>
+
+      <div class="cert-name">{{ registration.name }}</div>
+      <div class="cert-gold" style="height:2px;width:120px;margin:0 auto 22px;background:linear-gradient(90deg,transparent,#b8892f,transparent)"></div>
+
+      <p class="cert-course">For successfully completing the live webinar session<br><strong style="color:#f6dfa4">{{ registration.title }}</strong></p>
+
+      <div class="cert-grid">
+        <div><span>Category</span><strong>{{ registration.category }}</strong></div>
+        <div><span>Session Date</span><strong>{{ registration.starts_at }}</strong></div>
+        <div><span>Duration</span><strong>{{ registration.duration }}</strong></div>
+        <div><span>Ticket ID</span><strong class="mono">{{ registration.ticket_code }}</strong></div>
+        <div><span>Verified ID</span><strong class="mono">{{ verify_hash }}</strong></div>
+        <div><span>Seat</span><strong class="mono">{{ registration.seat_code }}</strong></div>
+      </div>
+
+      <div class="between wrap" style="align-items:flex-end;text-align:left;gap:24px">
+        <div style="text-align:center">
+          <div class="qr-box" style="width:104px;height:104px;padding:8px;margin:0 auto 8px">{{ qr_svg|safe }}</div>
+          <span class="cert-sub" style="font-size:9px;letter-spacing:1px">Scan to verify</span>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <div class="signature">Raj Gautam</div>
+          <div style="border-top:1px solid rgba(184,137,47,.5);padding-top:8px;margin-top:4px">
+            <strong class="cert-gold" style="font-size:13px">Raj Gautam</strong><br>
+            <span class="cert-sub" style="font-size:9px">Lead Host &amp; Architect · WebiMeet</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="cert-gold" style="font-size:11px;letter-spacing:2px;font-weight:800">✔ VERIFIED</div>
+          <p class="cert-sub" style="font-size:9px;line-height:1.8;margin-top:6px">graj13099@gmail.com<br>+91 9555785729<br>@linux.userraj<br>github.com/Rg100152</p>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="card cert-locked">
+      <div class="lock">🔒</div>
+      <h2 style="margin-top:14px">Certificate is locked</h2>
+      <p class="muted" style="max-width:460px;margin-inline:auto">Your digital signature is generated only after verified attendance. Enter the webinar theater room with your RSVP pass to unlock it automatically.</p>
+      <div class="row wrap" style="justify-content:center;margin-top:20px">
+        <a href="{{ url_for('webinar.room', webinar_id=registration.webinar_id, ticket=registration.ticket_code) }}" class="btn btn-primary btn-lg">▶ Enter Room &amp; Verify</a>
+        <a href="{{ url_for('webinar.ticket', ticket_code=registration.ticket_code) }}" class="btn btn-outline btn-lg">🎟 View Pass</a>
+      </div>
+      <p class="dim mono" style="font-size:11px;margin-top:22px">{{ registration.ticket_code }} · status: {{ registration.status }}</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

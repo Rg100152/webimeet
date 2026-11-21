@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}RSVP Pass · {{ registration.ticket_code }}{% endblock %}
+
+{% block content %}
+<section class="container section-sm">
+  <div class="ticket-wrap">
+    <div class="between no-print" style="margin-bottom:18px">
+      <a href="{{ url_for('webinar.lobby') }}" class="back-link" style="margin:0">← Back to Lobby</a>
+      <div class="row wrap">
+        <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Save as PDF / Print</button>
+        {% if registration.status == 'ATTENDED' %}
+        <a href="{{ url_for('webinar.certificate', ticket_code=registration.ticket_code) }}" class="btn btn-primary btn-sm">🏅 Certificate</a>
+        {% else %}
+        <a href="{{ url_for('webinar.room', webinar_id=registration.webinar_id, ticket=registration.ticket_code) }}" class="btn btn-primary btn-sm">▶ Enter Room</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <div class="ticket-brand">
+          <img src="{{ url_for('static', filename='assets/logo-webimeet.svg') }}" alt="WebiMeet">
+          <div>
+            <strong style="display:block;font-size:15px">Digital RSVP Boarding Pass</strong>
+            <span class="dim" style="font-size:11px">Live &amp; On-Demand Webinar Hub</span>
+          </div>
+        </div>
+        <span class="badge {{ 'badge-live' if registration.mode == 'live' else 'badge-recorded' }}">
+          {{ '● LIVE EVENT' if registration.mode == 'live' else '◆ ON DEMAND' }}
+        </span>
+      </div>
+
+      <div class="ticket-body">
+        <div>
+          <div class="ticket-label">Attendee</div>
+          <div class="ticket-name">{{ registration.name }}</div>
+          <div class="ticket-event">{{ registration.title }}</div>
+          <p class="muted" style="font-size:12.5px;margin:10px 0 0">Hosted by {{ registration.speaker }} · {{ registration.category }}</p>
+
+          <div class="ticket-details">
+            <div>
+              <div class="ticket-label">Ticket Code</div>
+              <strong class="mono" style="color:var(--amber)">{{ registration.ticket_code }}</strong>
+            </div>
+            <div>
+              <div class="ticket-label">Seat</div>
+              <strong class="mono">{{ registration.seat_code }}</strong>
+            </div>
+            <div>
+              <div class="ticket-label">Session</div>
+              <strong>{{ registration.starts_at }}</strong>
+            </div>
+            <div>
+              <div class="ticket-label">Duration</div>
+              <strong>{{ registration.duration }}</strong>
+            </div>
+          </div>
+
+          <div style="margin-top:22px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);font-size:12px;color:var(--muted)">
+            <strong style="color:var(--text)">Attendance status:</strong>
+            {% if registration.status == 'ATTENDED' %}
+              <span style="color:var(--emerald)">✔ VERIFIED — certificate unlocked</span>
+            {% else %}
+              <span style="color:var(--amber)">◷ REGISTERED — status updates when you enter the theater room</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div>
+          <div class="qr-box">{{ qr_svg|safe }}</div>
+          <div class="ticket-code">{{ registration.ticket_code }}</div>
+          <p class="dim" style="font-size:10.5px;text-align:center;margin:8px 0 0;line-height:1.5">Scan at the theater entrance<br>to verify &amp; mark attendance</p>
+        </div>
+      </div>
+
+      <div class="ticket-bottom">
+        <span>Issued by <strong style="color:var(--text)">Raj Gautam</strong> · Lead Host &amp; Architect</span>
+        <span>✉ graj13099@gmail.com &nbsp;·&nbsp; ☎ +91 9555785729 &nbsp;·&nbsp; ◎ @linux.userraj</span>
+        <span class="mono">{{ verify_url }}</span>
+      </div>
+    </div>
+
+    <p class="dim center" style="font-size:11px;margin-top:18px">This pass is unique to {{ registration.email }} · Valid for one attendance record.</p>
+  </div>
+</section>
+{% endblock %}

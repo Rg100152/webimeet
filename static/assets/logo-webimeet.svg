@@ -1,0 +1,22 @@
+<svg width="240" height="52" viewBox="0 0 240 52" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WebiMeet logo">
+  <defs>
+    <linearGradient id="wmGlow" x1="4" y1="6" x2="44" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F43F5E"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <filter id="wmSoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="3" y="5" width="42" height="42" rx="12" fill="#18181B" stroke="url(#wmGlow)" stroke-width="2.4"/>
+  <circle cx="24" cy="26" r="10.5" stroke="#F43F5E" stroke-width="1.8" stroke-dasharray="4 3" opacity="0.95"/>
+  <path d="M20.5 20.5 L30 26 L20.5 31.5 Z" fill="#FAFAFA"/>
+  <path d="M14.5 18 C12 22 12 30 14.5 34" stroke="#FB7185" stroke-width="1.9" stroke-linecap="round" filter="url(#wmSoft)"/>
+  <circle cx="38" cy="12" r="3.4" fill="#10B981"/>
+  <circle cx="38" cy="12" r="5.6" fill="#10B981" opacity="0.16"/>
+
+  <text x="54" y="33" fill="#FAFAFA" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="900" font-size="23" letter-spacing="0.4">Webi<tspan fill="#F43F5E">Meet</tspan></text>
+  <text x="55" y="44" fill="#71717A" font-family="system-ui, sans-serif" font-weight="600" font-size="7.4" letter-spacing="2.2">BY RAJ GAUTAM</text>
+</svg>

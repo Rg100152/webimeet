@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}{{ webinar.title }}{% endblock %}
+
+{% block content %}
+
+<div class="container section-sm" style="padding-bottom:0">
+  <a href="{{ url_for('webinar.lobby') }}" class="back-link">← Back to Lobby</a>
+  <div class="between wrap">
+    <div>
+      <span class="eyebrow">WebiMeet Theater · Room #{{ webinar.id }}</span>
+      <h2 style="margin:8px 0 4px;font-size:26px">{{ webinar.title }}</h2>
+      <div class="session-meta" style="margin:0">
+        <span>🎙 {{ webinar.speaker }}</span><span>·</span><span>{{ webinar.category }}</span><span>·</span><span>⏱ {{ webinar.duration }}</span>
+      </div>
+    </div>
+    {% if registration %}
+      <a href="{{ url_for('webinar.certificate', ticket_code=registration.ticket_code) }}" class="btn btn-primary btn-sm">🏅 Claim Certificate</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container section-sm">
+  <div class="theater">
+
+    <!-- 70% : Video / Presentation Stage -->
+    <section class="stage-panel">
+      <div class="video-shell">
+        {% if preview %}
+          <div style="position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 40% 40%, rgba(244,63,94,.22), transparent 50%), radial-gradient(circle at 75% 70%, rgba(139,92,246,.25), transparent 55%), #0b0b0f">
+            <div class="hero-orb" style="width:220px;height:220px;left:50%;top:50%"></div>
+            <div class="play-core" style="position:relative;top:auto;left:auto;transform:none;width:88px;height:88px">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="white"/></svg>
+            </div>
+          </div>
+        {% elif webinar.mode == 'live' %}
+          <iframe
+            src="{{ webinar.video_url or ('https://meet.jit.si/WebiMeet-' ~ webinar.id) }}"
+            allow="camera; microphone; fullscreen; display-capture; autoplay"
+            allowfullscreen loading="lazy"
+            title="Live Jitsi broadcast — {{ webinar.title }}"></iframe>
+        {% else %}
+          <iframe
+            src="{{ webinar.video_url }}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowfullscreen loading="lazy"
+            title="Recorded session — {{ webinar.title }}"></iframe>
+        {% endif %}
+
+        <div class="stage-overlay-top">
+          {% if webinar.mode == 'live' %}
+            <span class="badge badge-live"><span class="dot"></span> Live Broadcast</span>
+          {% else %}
+            <span class="badge badge-recorded">◆ On Demand Recording</span>
+          {% endif %}
+          <span class="viewers">◉ {{ webinar.attendees }} {{ 'watching' if webinar.mode == 'live' else 'views' }}</span>
+        </div>
+
+        <div class="reaction-layer" id="reaction-layer"></div>
+      </div>
+
+      <div class="reaction-bar">
+        <span class="label">React live</span>
+        <button class="emoji-btn" data-emoji="🔥" aria-label="Fire reaction">🔥</button>
+        <button class="emoji-btn" data-emoji="👏" aria-label="Clap reaction">👏</button>
+        <button class="emoji-btn" data-emoji="❤️" aria-label="Heart reaction">❤️</button>
+        <button class="emoji-btn" data-emoji="💡" aria-label="Insight reaction">💡</button>
+        <span class="muted" style="font-size:11.5px;margin-left:auto">Click to send a floating reaction across the stage ✨</span>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="speaker-panel">
+          <div class="row">
+            <div class="avatar avatar-lg">RG</div>
+            <div>
+              <strong style="display:block">{{ webinar.speaker }}</strong>
+              <span class="dim" style="font-size:12px">Lead Host &amp; Architect · {{ webinar.category }}</span>
+              <p class="muted" style="font-size:12.5px;margin:8px 0 0;max-width:520px">{{ webinar.description }}</p>
+            </div>
+          </div>
+          <div class="resource-actions">
+            {% if webinar.slides_url %}
+            <a href="{{ webinar.slides_url }}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">📄 Download Slides / Notes</a>
+            {% endif %}
+            {% if registration %}
+              <a href="{{ url_for('webinar.ticket', ticket_code=registration.ticket_code) }}" class="btn btn-outline btn-sm">🎟 My RSVP Pass</a>
+            {% else %}
+              <a href="{{ url_for('webinar.lobby') }}" class="btn btn-outline btn-sm">🎟 Get RSVP Pass</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 30% : Live Chat & Q&A Dock -->
+    <aside class="chat-dock" id="chat-app" data-webinar-id="{{ webinar.id }}" data-last-id="{{ messages[-1].id if messages else 0 }}">
+      <div class="chat-head">
+        <h3>◈ Live Chat &amp; Q&amp;A</h3>
+        <span class="live-pill"><span class="dot"></span> LIVE</span>
+      </div>
+
+      <div class="identity-box">
+        <input type="text" id="display-name" maxlength="40" placeholder="Enter your display name" aria-label="Display name">
+        <div class="row between" style="margin-top:10px">
+          <span class="identity-hint">Name saved locally for next time</span>
+          <label class="qa-toggle" title="Highlight this message for the speaker">
+            <input type="checkbox" id="is-question"> ◆ Ask Question
+          </label>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages" aria-live="polite">
+        <div class="chat-empty" id="chat-empty">💬 No messages yet — start the conversation!</div>
+        {% for m in messages %}
+        <article class="chat-msg {{ 'is-question' if m.is_question }}" data-id="{{ m.id }}">
+          <div class="chat-msg-head">
+            <div class="avatar">{{ m.name[:2]|upper }}</div>
+            <strong>{{ m.name }}</strong>
+            {% if m.is_question %}<span class="qa-tag">◆ Q&amp;A</span>{% endif %}
+            <time>{{ m.time_label }}</time>
+          </div>
+          <p>{{ m.message }}</p>
+        </article>
+        {% endfor %}
+      </div>
+
+      <div class="chat-compose">
+        <form id="chat-form">
+          <textarea id="chat-input" maxlength="500" placeholder="Say something to the room…" aria-label="Chat message"></textarea>
+          <div class="compose-row">
+            <span class="char-count" id="char-count">0/500</span>
+            <div class="row" style="gap:10px">
+              <span class="conn-status" id="conn-status"><span class="dot"></span> Live · 2s sync</span>
+              <button type="submit" class="btn btn-primary btn-sm">Send ➤</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/liveChat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reactions.js') }}"></script>
+{% endblock %}

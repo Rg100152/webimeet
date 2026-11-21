@@ -1,0 +1,50 @@
+<svg width="1280" height="320" viewBox="0 0 1280 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WebiMeet banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B0B0F"/><stop offset="0.55" stop-color="#111116"/><stop offset="1" stop-color="#0B0B0F"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="120" y1="90" x2="260" y2="230" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F43F5E"/><stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientTransform="translate(230 160) rotate(90) scale(210)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F43F5E" stop-opacity="0.30"/><stop offset="1" stop-color="#F43F5E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientTransform="translate(1120 60) rotate(90) scale(250)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B5CF6" stop-opacity="0.22"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#FFFFFF" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="320" fill="url(#bg)"/>
+  <rect width="1280" height="320" fill="url(#grid)"/>
+  <circle cx="230" cy="160" r="210" fill="url(#glow1)"/>
+  <circle cx="1120" cy="60" r="250" fill="url(#glow2)"/>
+
+  <!-- emblem -->
+  <rect x="120" y="90" width="140" height="140" rx="34" fill="#18181B" stroke="url(#accent)" stroke-width="5"/>
+  <circle cx="190" cy="160" r="42" stroke="#F43F5E" stroke-width="4" stroke-dasharray="10 8" opacity="0.9"/>
+  <circle cx="190" cy="160" r="27" stroke="#8B5CF6" stroke-width="2" opacity="0.55"/>
+  <path d="M180 144 L208 160 L180 176 Z" fill="#FAFAFA"/>
+  <circle cx="248" cy="102" r="9" fill="#10B981"/>
+  <circle cx="248" cy="102" r="15" fill="#10B981" opacity="0.15"/>
+
+  <!-- title -->
+  <text x="300" y="168" fill="#FAFAFA" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="900" font-size="74" letter-spacing="-2">Webi<tspan fill="#F43F5E">Meet</tspan></text>
+  <text x="304" y="204" fill="#A1A1AA" font-family="system-ui, sans-serif" font-weight="700" font-size="18" letter-spacing="5">LIVE &amp; ON-DEMAND WEBINAR HUB</text>
+  <text x="304" y="232" fill="#71717A" font-family="system-ui, sans-serif" font-weight="600" font-size="13" letter-spacing="2.4">REAL-TIME CHAT · RSVP TICKETS · INSTANT CERTIFICATES · BY RAJ GAUTAM</text>
+
+  <!-- right signal motif -->
+  <g stroke="url(#accent)" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.8">
+    <path d="M1010 128a52 52 0 0 1 0 64"/>
+    <path d="M1032 108a80 80 0 0 1 0 104"/>
+    <path d="M1054 88a108 108 0 0 1 0 144"/>
+    <path d="M988 148a28 28 0 0 1 0 24"/>
+  </g>
+  <circle cx="978" cy="160" r="7" fill="#F43F5E"/>
+  <rect x="1090" y="128" width="2" height="64" fill="#27272A"/>
+
+  <text x="1116" y="158" fill="#FAFAFA" font-family="system-ui, sans-serif" font-weight="800" font-size="22">Flask</text>
+  <text x="1116" y="188" fill="#A1A1AA" font-family="system-ui, sans-serif" font-weight="600" font-size="15">SQLite · Vanilla JS</text>
+</svg>

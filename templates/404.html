@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+{% block content %}
+<section class="container section center">
+  <div style="font-size:70px;font-weight:900" class="gradient-text">404</div>
+  <h2 style="margin-top:6px">This stage is empty.</h2>
+  <p class="muted">The page or ticket you're looking for doesn't exist.</p>
+  <div class="row" style="justify-content:center;margin-top:20px">
+    <a href="{{ url_for('webinar.lobby') }}" class="btn btn-primary">← Back to Lobby</a>
+    <a href="{{ url_for('webinar.portfolio') }}" class="btn btn-outline">View Portfolio</a>
+  </div>
+</section>
+{% endblock %}

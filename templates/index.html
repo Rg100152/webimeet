@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Live & On-Demand Webinar Hub{% endblock %}
+
+{% block content %}
+
+<section class="container py-hero">
+  <div class="between" style="margin-bottom:22px">
+    <div>
+      <span class="eyebrow">Broadcast Studio · Raj Gautam HQ</span>
+      <h1 style="margin-top:14px">Learn live. <span class="gradient-text">Build boldly.</span></h1>
+      <p class="muted" style="max-width:620px">A cinema-stage webinar platform with real-time chat, highlighted Q&amp;A, digital RSVP passes and instant attendance certificates.</p>
+    </div>
+    <div class="row wrap" style="gap:10px">
+      <a href="{{ url_for('webinar.portfolio') }}" class="btn btn-outline btn-sm">← All Projects</a>
+      <a href="#sessions" class="btn btn-ghost btn-sm">Browse Sessions ↓</a>
+    </div>
+  </div>
+
+  {% if featured %}
+  <div class="hero-stage">
+    <div class="hero-visual">
+      <div class="hero-orb"></div>
+      <div class="play-core">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="white"/></svg>
+      </div>
+      <div class="hero-overlay">
+        {% if featured.mode == 'live' %}
+          <span class="badge badge-live"><span class="dot"></span> Live Now</span>
+        {% else %}
+          <span class="badge badge-recorded">◆ On Demand</span>
+        {% endif %}
+        <span class="viewers">◉ {{ featured.attendees }} watching</span>
+      </div>
+      <div class="hero-overlay-bottom">
+        <span class="tag-chip">{{ featured.icon }} {{ featured.category }}</span>
+        <span class="tag-chip">⏱ {{ featured.duration }}</span>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <span class="eyebrow">Featured {{ 'Live Session' if featured.mode == 'live' else 'Recording' }}</span>
+      <h1>{{ featured.title }}</h1>
+      <p>{{ featured.description }}</p>
+
+      <div class="speaker-chip">
+        <div class="avatar avatar-lg">RG</div>
+        <div>
+          <strong>{{ featured.speaker }}</strong>
+          <span>Lead Host &amp; Architect · {{ featured.starts_at }}</span>
+        </div>
+      </div>
+
+      <div class="row wrap">
+        <a href="{{ url_for('webinar.room', webinar_id=featured.id) }}" class="btn btn-primary btn-lg">▶ Join Webinar Room →</a>
+        <button class="btn btn-outline btn-lg" onclick="openRsvp({{ featured.id }}, this.dataset.title)" data-title="{{ featured.title }}">🎟 Reserve Seat</button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="stat-strip">
+    <div class="stat-box"><strong>{{ stats.live }}</strong><span>Live Sessions</span></div>
+    <div class="stat-box"><strong>{{ stats.recorded }}</strong><span>On Demand</span></div>
+    <div class="stat-box"><strong>{{ stats.watching }}</strong><span>Watching Now</span></div>
+    <div class="stat-box"><strong>2 sec</strong><span>Chat Sync</span></div>
+  </div>
+</section>
+
+<section class="container section" id="sessions">
+  <div class="between" style="align-items:flex-end">
+    <div>
+      <span class="eyebrow">Session Library</span>
+      <h2 style="margin-top:10px">Choose your stage</h2>
+    </div>
+    <p class="muted" style="max-width:380px;font-size:13px;margin:0">Live sessions run on embedded Jitsi rooms. Recorded sessions play instantly in the theater.</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" role="tab" data-tab="live">● Live &amp; Upcoming <span class="tag-chip">{{ live|length }}</span></button>
+    <button class="tab" role="tab" data-tab="recorded">▶ Recorded Library <span class="tag-chip">{{ recorded|length }}</span></button>
+  </div>
+
+  <div id="panel-live" class="tab-panel">
+    <div class="grid grid-3">
+      {% for w in live %}
+      <article class="card">
+        <div class="session-thumb">
+          <span class="badge badge-live"><span class="dot"></span> {{ 'Live' if w.starts_at == 'LIVE NOW' else 'Upcoming' }}</span>
+          <span>{{ w.icon }}</span>
+          <span class="duration">⏱ {{ w.duration }}</span>
+        </div>
+        <div class="card-body">
+          <div class="session-meta"><span>🎙 {{ w.speaker }}</span><span>·</span><span>{{ w.category }}</span></div>
+          <div class="session-title">{{ w.title }}</div>
+          <p class="muted" style="font-size:12.5px;margin-top:8px">{{ w.description|truncate(95) }}</p>
+          <div class="card-foot">
+            <a href="{{ url_for('webinar.room', webinar_id=w.id) }}" class="btn btn-primary btn-sm">Enter Room →</a>
+            <button class="btn btn-ghost btn-sm" onclick="openRsvp({{ w.id }}, this.dataset.title)" data-title="{{ w.title }}">🎟 RSVP</button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div id="panel-recorded" class="tab-panel hide">
+    <div class="grid grid-3">
+      {% for w in recorded %}
+      <article class="card">
+        <div class="session-thumb">
+          <span class="badge badge-recorded">◆ On Demand</span>
+          <span>{{ w.icon }}</span>
+          <span class="duration">⏱ {{ w.duration }}</span>
+        </div>
+        <div class="card-body">
+          <div class="session-meta"><span>🎙 {{ w.speaker }}</span><span>·</span><span>{{ w.category }}</span></div>
+          <div class="session-title">{{ w.title }}</div>
+          <p class="muted" style="font-size:12.5px;margin-top:8px">{{ w.description|truncate(95) }}</p>
+          <div class="card-foot">
+            <a href="{{ url_for('webinar.room', webinar_id=w.id) }}" class="btn btn-violet btn-sm">▶ Watch Now</a>
+            <button class="btn btn-ghost btn-sm" onclick="openRsvp({{ w.id }}, this.dataset.title)" data-title="{{ w.title }}">🎟 RSVP</button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="container section-sm">
+  <div class="card" style="padding:30px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+    <div>
+      <span class="eyebrow">Host Studio</span>
+      <h2 style="margin:8px 0 4px">Want the stage yourself?</h2>
+      <p class="muted" style="margin:0;font-size:13px">Launch a live Jitsi webinar or publish a recorded session in under a minute.</p>
+    </div>
+    <a href="{{ url_for('webinar.host') }}" class="btn btn-primary btn-lg">＋ Create Webinar</a>
+  </div>
+</section>
+
+<!-- RSVP modal -->
+<div class="modal-backdrop" id="rsvp-modal" role="dialog" aria-modal="true" aria-label="Reserve your seat">
+  <div class="modal">
+    <div class="between">
+      <div>
+        <span class="eyebrow">1-Click RSVP</span>
+        <h3 style="margin:8px 0 2px">Reserve your seat</h3>
+        <p class="muted" style="font-size:12.5px;margin:0" id="rsvp-event"></p>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeRsvp()" aria-label="Close">✕</button>
+    </div>
+    <div class="divider" style="margin:20px 0"></div>
+    <form action="{{ url_for('webinar.register') }}" method="post">
+      <input type="hidden" name="webinar_id" id="rsvp-webinar-id">
+      <div class="field">
+        <label for="rsvp-name">Your full name</label>
+        <input id="rsvp-name" name="name" placeholder="e.g. Aarav Sharma" required autofocus>
+      </div>
+      <div class="field">
+        <label for="rsvp-email">Email address</label>
+        <input id="rsvp-email" name="email" type="email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:10px">🎟 Generate My Digital Pass →</button>
+      <p class="dim" style="font-size:11px;text-align:center;margin:12px 0 0">You'll get a unique ticket code + QR pass instantly.</p>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const modal = document.getElementById('rsvp-modal');
+  function openRsvp(id, title) {
+    document.getElementById('rsvp-webinar-id').value = id;
+    document.getElementById('rsvp-event').textContent = title || '';
+    modal.classList.add('open');
+    setTimeout(() => document.getElementById('rsvp-name').focus(), 60);
+  }
+  function closeRsvp() { modal.classList.remove('open'); }
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeRsvp(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRsvp(); });
+
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hide'));
+      document.getElementById('panel-' + tab.dataset.tab).classList.remove('hide');
+    });
+  });
+</script>
+{% endblock %}
